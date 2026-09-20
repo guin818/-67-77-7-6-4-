@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CR 4.3 Unit 4 - Not to trust too easily</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-sub: #475569;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --border: #e2e8f0;
+      --accent-en: #2563eb;
+      --accent-ko: #059669;
+      --check-active: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 0.875rem;
+      color: var(--text-sub);
+    }
+
+    /* 상단 전체 읽기 트래커 */
+    .overall-tracker {
+      background: #f1f5f9;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tracker-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tracker-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .reset-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .reset-btn:hover {
+      color: #ef4444;
+    }
+
+    .overall-checks {
+      display: flex;
+      gap: 8px;
+    }
+
+    .check-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .check-item input {
+      display: none;
+    }
+
+    .check-box {
+      width: 100%;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #94a3b8;
+      transition: all 0.2s;
+    }
+
+    .check-item input:checked + .check-box {
+      background: var(--check-active);
+      border-color: var(--check-active);
+      color: #ffffff;
+      box-shadow: 0 2px 5px rgba(16, 185, 129, 0.25);
+    }
+
+    .lang-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-area {
+      padding: 24px;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 16px;
+      line-height: 1.7;
+    }
+
+    .paragraph-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .text-en {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      font-weight: 500;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent-en);
+      white-space: pre-line;
+    }
+
+    .text-ko {
+      font-size: 0.975rem;
+      color: var(--text-sub);
+      padding-left: 12px;
+      border-left: 3px solid var(--accent-ko);
+      white-space: pre-line;
+    }
+
+    .footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+    }
+
+    .page-indicator {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>CR 4.3 Unit 4</h1>
+      <p>Not to trust too easily (너무 쉽게 믿지 마라)</p>
+    </div>
+
+    <!-- 전체 지문 6회 읽기 체크 트래커 -->
+    <div class="overall-tracker">
+      <div class="tracker-title-row">
+        <span class="tracker-title">📚 전체 지문 완독 체크 (총 6회)</span>
+        <button class="reset-btn" onclick="resetOverallReadCount()">초기화</button>
+      </div>
+      <div class="overall-checks" id="overall-checks-container">
+        <!-- JS 동적 생성 -->
+      </div>
+    </div>
+
+    <div class="lang-tabs">
+      <button class="tab-btn active" onclick="setLang('both')">영어 + 한국어</button>
+      <button class="tab-btn" onclick="setLang('en')">영어만</button>
+      <button class="tab-btn" onclick="setLang('ko')">한국어만</button>
+    </div>
+
+    <div class="content-area">
+      <div class="paragraph-box">
+        <div id="text-en" class="text-en"></div>
+        <div id="text-ko" class="text-ko"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="page-indicator" id="page-indicator">1 / 10</span>
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" onclick="prevPage()">이전</button>
+        <button class="nav-btn" id="next-btn" onclick="nextPage()">다음</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const storyData = [
+      {
+        en: "In New York, there was a small forest where cicadas lived together. Butterflies and Dragonflies flew across the woods peacefully, where beautiful flowers bloomed all over. The cicadas, who exceptionally liked songs, were also popular in the woods.",
+        ko: "뉴욕에는 매미들이 함께 살아가는 작은 숲이 있었습니다. 아름다운 꽃들이 사방에 피어난 그 숲 속으로 나비와 잠자리들이 평화롭게 날아다녔습니다. 특히 노래 부르는 것을 좋아했던 매미들은 숲 속에서도 인기가 많았습니다."
+      },
+      {
+        en: "However, one by one, the cicadas began to disappear. At that time, one of them named John, noticed his friends missing, and thought it was weird. It turned out that there were foxes eating the cicadas. The shrewd foxes drooled every time they saw cicadas. They always had clever ideas to make them come down from the trees so they could eat.",
+        ko: "하지만 매미들은 하나둘 사라지기 시작했습니다. 그때 존이라는 이름의 매미 하나가 친구들이 사라진 것을 눈치채고 이상하다고 생각했습니다. 알고 보니 매미를 잡아먹는 여우들이 있었던 것입니다. 교활한 여우들은 매미를 볼 때마다 침을 흘렸습니다. 여우들은 매미를 잡아먹기 위해 나무에서 내려오게 만드는 영리한 꾀를 항상 가지고 있었습니다."
+      },
+      {
+        en: "In the winter, the cicadas would go into the trees to avoid the cold. The foxes planned to eat up all the cicadas before that.",
+        ko: "겨울이 되면 매미들은 추위를 피하기 위해 나무 속으로 들어갈 예정이었습니다. 여우들은 그 전에 매미를 모두 잡아먹을 계획을 세웠습니다."
+      },
+      {
+        en: "One ordinary day, John was singing in a clear voice on some leafy branches. Jack, the fox, heard the voice as he was passing by. Jack was a cruel fox who would wander through the woods until he was stuffed with cicadas. The greedy fox was searching for trees nearby to catch John secretly without letting anybody notice.",
+        ko: "어느 평범한 날, 존은 잎이 무성한 가지 위에서 맑은 목소리로 노래를 부르고 있었습니다. 지나가던 여우 잭이 그 목소리를 들었습니다. 잭은 매미로 배가 가득 찰 때까지 숲 속을 돌아다니는 잔인한 여우였습니다. 탐욕스러운 여우는 아무도 눈치채지 못하게 존을 몰래 잡기 위해 근처 나무들을 살폈습니다."
+      },
+      {
+        en: "Jack found John singing just in time.\n\n\"The cicada is singing! I'm so hungry that I have to eat him, but I cannot because he is sitting on a high tree. I cannot go up. How can I make him fall?\"\n\nJack, who could not climb the tree, pondered and came up with a good idea.\n\n\"I know what to do!\"",
+        ko: "잭은 마침 노래를 부르고 있는 존을 발견했습니다.\n\n\"매미가 노래를 부르고 있군! 너무 배가 고파서 먹어야겠는데, 높은 나무에 앉아 있어서 먹을 수가 없네. 올라갈 수도 없고. 어떻게 하면 떨어뜨릴 수 있을까?\"\n\n나무에 오를 수 없었던 잭은 곰곰이 생각한 끝에 좋은 아이디어를 떠올렸습니다.\n\n\"어떻게 해야 할지 알겠다!\""
+      },
+      {
+        en: "Jack laughed and ran towards John because a bright idea had come to his head. He went straight under the tree where John was sitting and said, \"You really sing well. I feel better hearing your voice, even though I don't know much about music.\"\n\nAppearing out of nowhere, the fox praised John's song. John wondered what the fox was talking about, but at that moment, he remembered his friend's advice saying to be cautious of foxes. John decided that he would not be deceived by any of the fox's tricks. He was a wiser cicada than Jack had thought.",
+        ko: "좋은 생각이 떠오른 잭은 웃으며 존을 향해 달려갔습니다. 잭은 존이 앉아 있는 나무 바로 아래로 가서 말했습니다. \"너 정말 노래를 잘 부르는구나. 음악에 대해 잘은 모르지만 네 목소리를 들으니 기분이 좋아져.\"\n\n느닷없이 나타난 여우가 존의 노래를 칭찬했습니다. 존은 여우가 무슨 소리를 하는 건지 의아해했지만, 그 순간 여우를 조심하라고 했던 친구의 조언이 떠올랐습니다. 존은 여우의 어떤 속임수에도 속지 않겠다고 다짐했습니다. 존은 잭이 생각했던 것보다 훨씬 지혜로운 매미였습니다."
+      },
+      {
+        en: "Since John did not say anything, Jack continued praising.\n\n\"I do not sing well, so I wish I could make a friend who is good at singing like you. I want to be friends with you and hear your songs everyday. Will you come down here and play with me? If we become friends, I can carry you and give you a lot of the delicious fruits that you like.\"",
+        ko: "존이 아무 말도 하지 않자, 잭은 계속해서 칭찬을 이어갔습니다.\n\n\"나는 노래를 못 불러서 너처럼 노래를 잘하는 친구를 사귀면 좋겠어. 너와 친구가 되어 매일 네 노래를 듣고 싶어. 이 아래로 내려와서 나와 같이 놀지 않을래? 우리가 친구가 되면 너를 업어줄 수도 있고, 네가 좋아하는 맛있는 과일도 많이 줄 수 있어.\""
+      },
+      {
+        en: "Jack persuaded John to come down the tree with a friendly, gentle voice. However, Jack's mouth was constantly dribbling. He covered his mouth with his paws so he would not show his intention to eat him.\n\nAfter a while, John looked down at Jack politely and smiled very brightly.\n\n\"Thank you for praising me so. I want to be friends with you too. I'll go down right now.\"",
+        ko: "잭은 친근하고 부드러운 목소리로 존에게 나무에서 내려오라고 설득했습니다. 하지만 잭의 입에서는 계속 침이 흘러내리고 있었습니다. 잭은 매미를 잡아먹으려는 의도를 들키지 않으려고 발로 입을 가렸습니다.\n\n잠시 후, 존은 예의 바르게 잭을 내려다보며 아주 밝게 미소를 지었습니다.\n\n\"그렇게 칭찬해줘서 고마워. 나도 너랑 친구가 되고 싶어. 지금 바로 내려갈게.\""
+      },
+      {
+        en: "Jack was pleased to hear John finally saying that he would come down, but he remained calm and behaved naturally. He waited for John to come down, but instead of climbing down himself, John picked up a leaf and dropped it. Jack thought that John was falling, so he ran quickly to the leaf. However, what Jack had caught was a leaf, not John.",
+        ko: "존이 마침내 내려오겠다고 말하자 잭은 기뻤지만, 침착함을 유지하며 자연스럽게 행동했습니다. 잭은 존이 내려오기를 기다렸으나, 존은 직접 내려오는 대신 나뭇잎 하나를 집어 떨어뜨렸습니다. 잭은 존이 떨어지는 줄 알고 나뭇잎을 향해 빠르게 달려갔습니다. 하지만 잭이 잡은 것은 존이 아니라 나뭇잎이었습니다."
+      },
+      {
+        en: "Jack realized that he had been tricked and reached toward the tree, but John was too far away to reach. The angry fox saw John and said bad words to him. Then, John rebuked Jack.\n\n\"I knew it!\"\n\nWhat John said next irritated the fox greatly.\n\n\"If you thought I was going to go down, you were wrong. I decided not to ever believe foxes since I found the wings of my friends in your droppings.\"",
+        ko: "속았다는 것을 깨달은 잭은 나무를 향해 손을 뻗었지만, 존은 닿을 수 없을 만큼 너무 멀리 있었습니다. 화가 난 여우는 존을 보며 나쁜 말을 퍼부었습니다. 그러자 존은 잭을 꾸짖었습니다.\n\n\"그럴 줄 알았어!\"\n\n이어서 존이 한 말은 여우를 엄청나게 화나게 만들었습니다.\n\n\"내가 내려갈 거라고 생각했다면 착각이야. 네 배설물에서 내 친구들의 날개를 발견한 후부터 여우는 절대로 믿지 않기로 결심했거든.\""
+      }
+    ];
+
+    const STORAGE_KEY = 'CR_4_3_UNIT_4_OVERALL_READ_TRACKER';
+    let currentIndex = 0;
+    let currentDisplayLang = 'both';
+
+    // LocalStorage에서 전체 읽기 데이터 가져오기
+    function getStoredOverallData() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          return [false, false, false, false, false, false];
+        }
+      }
+      return [false, false, false, false, false, false];
+    }
+
+    // LocalStorage에 저장하기
+    function saveOverallState(index, isChecked) {
+      const data = getStoredOverallData();
+      data[index] = isChecked;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function renderOverallTracker() {
+      const container = document.getElementById('overall-checks-container');
+      container.innerHTML = '';
+      const checks = getStoredOverallData();
+
+      for (let i = 0; i < 6; i++) {
+        const label = document.createElement('label');
+        label.className = 'check-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = checks[i] || false;
+        checkbox.onchange = (e) => {
+          saveOverallState(i, e.target.checked);
+        };
+
+        const box = document.createElement('div');
+        box.className = 'check-box';
+        box.innerText = `${i + 1}회 완독`;
+
+        label.appendChild(checkbox);
+        label.appendChild(box);
+        container.appendChild(label);
+      }
+    }
+
+    function resetOverallReadCount() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([false, false, false, false, false, false]));
+      renderOverallTracker();
+    }
+
+    function updateView() {
+      const item = storyData[currentIndex];
+      const textEnEl = document.getElementById('text-en');
+      const textKoEl = document.getElementById('text-ko');
+
+      textEnEl.innerText = item.en;
+      textKoEl.innerText = item.ko;
+
+      if (currentDisplayLang === 'both') {
+        textEnEl.style.display = 'block';
+        textKoEl.style.display = 'block';
+      } else if (currentDisplayLang === 'en') {
+        textEnEl.style.display = 'block';
+        textKoEl.style.display = 'none';
+      } else {
+        textEnEl.style.display = 'none';
+        textKoEl.style.display = 'block';
+      }
+
+      document.getElementById('page-indicator').innerText = `${currentIndex + 1} / ${storyData.length}`;
+      document.getElementById('prev-btn').disabled = currentIndex === 0;
+      document.getElementById('next-btn').disabled = currentIndex === storyData.length - 1;
+    }
+
+    function setLang(lang) {
+      currentDisplayLang = lang;
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', (lang === 'both' && idx === 0) || (lang === 'en' && idx === 1) || (lang === 'ko' && idx === 2));
+      });
+      updateView();
+    }
+
+    function prevPage() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateView();
+      }
+    }
+
+    function nextPage() {
+      if (currentIndex < storyData.length - 1) {
+        currentIndex++;
+        updateView();
+      }
+    }
+
+    // 초기 실행
+    renderOverallTracker();
+    updateView();
+  </script>
+</body>
+</html>
